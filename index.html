@@ -46,19 +46,38 @@
             with your code! Learn something new every day!
         </p>
     </div>
-    <div>
-        <h2 class="section_3">What will you learn today?</h2>
-        <p class="star_wars">Why don't you try turning this </br>
-            text box into a star wars type text</br>
-            scroll, where it fades in the </br>
-            distance, using purely css? Don't think its possible? </br>
-            I have done it before and its easier than you think!</br>
-            Obviously if you feel the need to, create more text </br>
-            here to elongate the paragraph. This will affect the time</br>
-            it takes for the text to travel up the page and into the </br>
-            fade our area.
-        </p>
+    <div class="section_3">
+            <div class="starwars-scroll" id="starwarsScroll1">
+            <div class="scroll-controls">
+                <button class="control-btn" onclick="toggleScroll('starwarsScroll1')" title="Play/Pause">⏸</button>
+                <button class="control-btn" onclick="restartScroll('starwarsScroll1')" title="Restart">↻</button>
+            </div>
+            <div class="scroll-content" id="scrollContent1">
+                <div class="scroll-text">
+                    <h3>What will you learn today?</h3>
+                    <p>Why don't you try turning this text box into a star wars type text scroll, where it fades in the distance, using purely CSS? Don't think it's possible? I have done it before and its easier than you think!</p>
+                    <p>Obviously if you feel the need to, create more text here to elongate the paragraph. This will affect the time it takes for the text to travel up the page and into the fade out area.</p>
+                    <p>The magic happens through CSS transforms and animations. By using perspective and rotateX, we create the illusion of text moving away from us into the distance. The gradient overlay provides the fade effect, making text appear and disappear naturally.</p>
+                    <p>This technique combines 3D CSS transforms with keyframe animations to create a cinematic effect that's both engaging and technically impressive. The best part? It's all done with pure CSS - no JavaScript required for the core animation!</p>
+                    <p>You can customize the speed, text size, rotation angle, and even add interactive controls. The component is fully reusable and can be integrated into any website while maintaining the existing theme and design language.</p>
+                    <p>Try experimenting with different text content, animation speeds, and styling options. The possibilities are endless when you understand the underlying principles of CSS 3D transforms and animations.</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+        <div class="demo-section">
+            <h2>Reusable Star Wars Scroll Component</h2>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="createScrollDemo('fast')">Fast Scroll</button>
+                <button class="demo-btn" onclick="createScrollDemo('slow')">Slow Scroll</button>
+                <button class="demo-btn" onclick="createScrollDemo('large')">Large Text</button>
+                <button class="demo-btn" onclick="createScrollDemo('angled')">More Angled</button>
+                <button class="demo-btn" onclick="createScrollDemo('custom')">Custom Content</button>
+            </div>
+            <div id="dynamicScrollContainer"></div>
+        </div>
+
 <div class="photo_gallery" id="photoGallery">
         <div class="gallery-header">
             <h1 class="gallery-title">Photo Gallery</h1>
@@ -344,5 +363,208 @@
 
         // Make gallery globally accessible for demo purposes
         window.gallery = gallery;
+
+        // Reusable Star Wars Scroll Component
+        class StarWarsScroll {
+            constructor(containerId, options = {}) {
+                this.containerId = containerId;
+                this.container = document.getElementById(containerId);
+                this.options = {
+                    duration: options.duration || 20, // seconds
+                    textSize: options.textSize || '1rem',
+                    rotation: options.rotation || '25deg',
+                    height: options.height || '400px',
+                    showControls: options.showControls !== false,
+                    content: options.content || this.getDefaultContent(),
+                    autoStart: options.autoStart !== false,
+                    ...options
+                };
+                
+                this.isPlaying = this.options.autoStart;
+                this.init();
+            }
+
+            getDefaultContent() {
+                return `
+                    <h3>Star Wars Scroll</h3>
+                    <p>This is a reusable Star Wars-style text scroll component created with pure CSS and JavaScript.</p>
+                    <p>You can customize the speed, text size, rotation angle, and content to fit your needs.</p>
+                    <p>The component maintains the theme of your website while adding an engaging cinematic effect.</p>
+                `;
+            }
+
+            init() {
+                this.createHTML();
+                this.setupEventListeners();
+                if (this.options.autoStart) {
+                    this.start();
+                }
+            }
+
+            createHTML() {
+                this.container.innerHTML = `
+                    <div class="starwars-scroll" style="height: ${this.options.height};">
+                        ${this.options.showControls ? `
+                            <div class="scroll-controls">
+                                <button class="control-btn" onclick="window.scrollInstances['${this.containerId}'].toggle()" title="Play/Pause">${this.isPlaying ? '⏸' : '▶'}</button>
+                                <button class="control-btn" onclick="window.scrollInstances['${this.containerId}'].restart()" title="Restart">↻</button>
+                            </div>
+                        ` : ''}
+                        <div class="scroll-content" style="
+                            --scroll-duration: ${this.options.duration}s;
+                            --text-size: ${this.options.textSize};
+                            --rotation: ${this.options.rotation};
+                        ">
+                            <div class="scroll-text">
+                                ${this.options.content}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.scrollContent = this.container.querySelector('.scroll-content');
+                this.playButton = this.container.querySelector('.control-btn');
+            }
+
+            setupEventListeners() {
+                // Store instance globally for button access
+                if (!window.scrollInstances) {
+                    window.scrollInstances = {};
+                }
+                window.scrollInstances[this.containerId] = this;
+            }
+
+            start() {
+                this.isPlaying = true;
+                this.scrollContent.classList.remove('paused');
+                if (this.playButton) {
+                    this.playButton.textContent = '⏸';
+                }
+            }
+
+            pause() {
+                this.isPlaying = false;
+                this.scrollContent.classList.add('paused');
+                if (this.playButton) {
+                    this.playButton.textContent = '▶';
+                }
+            }
+
+            toggle() {
+                if (this.isPlaying) {
+                    this.pause();
+                } else {
+                    this.start();
+                }
+            }
+
+            restart() {
+                this.scrollContent.style.animation = 'none';
+                this.scrollContent.offsetHeight; // Trigger reflow
+                this.scrollContent.style.animation = null;
+                this.start();
+            }
+
+            updateContent(newContent) {
+                this.options.content = newContent;
+                this.container.querySelector('.scroll-text').innerHTML = newContent;
+            }
+
+            updateOptions(newOptions) {
+                this.options = { ...this.options, ...newOptions };
+                this.scrollContent.style.setProperty('--scroll-duration', `${this.options.duration}s`);
+                this.scrollContent.style.setProperty('--text-size', this.options.textSize);
+                this.scrollContent.style.setProperty('--rotation', this.options.rotation);
+            }
+        }
+
+        // Global functions for inline event handlers
+        function toggleScroll(containerId) {
+            if (window.scrollInstances && window.scrollInstances[containerId]) {
+                window.scrollInstances[containerId].toggle();
+            }
+        }
+
+        function restartScroll(containerId) {
+            if (window.scrollInstances && window.scrollInstances[containerId]) {
+                window.scrollInstances[containerId].restart();
+            }
+        }
+
+        // Demo functions
+        function createScrollDemo(type) {
+            const container = document.getElementById('dynamicScrollContainer');
+            container.innerHTML = '<div id="demoScroll"></div>';
+
+            let options = {};
+            
+            switch(type) {
+                case 'fast':
+                    options = {
+                        duration: 10,
+                        content: `
+                            <h3>Fast Scroll Demo</h3>
+                            <p>This scroll moves much faster than the default speed.</p>
+                            <p>Perfect for shorter content or when you want a more dynamic feel.</p>
+                        `
+                    };
+                    break;
+                case 'slow':
+                    options = {
+                        duration: 30,
+                        content: `
+                            <h3>Slow Scroll Demo</h3>
+                            <p>This scroll moves slowly and deliberately.</p>
+                            <p>Great for longer content or when you want users to have time to read everything.</p>
+                            <p>The slower pace creates a more contemplative, cinematic experience.</p>
+                        `
+                    };
+                    break;
+                case 'large':
+                    options = {
+                        textSize: '1.2rem',
+                        content: `
+                            <h3>Large Text Demo</h3>
+                            <p>This demonstrates larger text size for better readability.</p>
+                            <p>Useful for important announcements or when targeting users who prefer larger fonts.</p>
+                        `
+                    };
+                    break;
+                case 'angled':
+                    options = {
+                        rotation: '40deg',
+                        content: `
+                            <h3>More Angled Demo</h3>
+                            <p>This version has a more dramatic angle, creating a stronger 3D effect.</p>
+                            <p>The steeper perspective makes the text appear to recede more dramatically into the distance.</p>
+                        `
+                    };
+                    break;
+                case 'custom':
+                    options = {
+                        duration: 25,
+                        textSize: '1.1rem',
+                        rotation: '30deg',
+                        content: `
+                            <h3>Custom Configuration</h3>
+                            <p>This example shows how you can combine multiple options to create exactly the effect you want.</p>
+                            <p>Medium duration, slightly larger text, and a moderate angle work together to create a balanced, professional look.</p>
+                            <p>The component is fully customizable while maintaining the theme and design consistency of your website.</p>
+                            <p>You can adjust timing, appearance, and behavior to match your specific needs and design requirements.</p>
+                        `
+                    };
+                    break;
+            }
+
+            new StarWarsScroll('demoScroll', options);
+        }
+
+        // Initialize the main scroll
+        const mainScroll = new StarWarsScroll('starwarsScroll1', {
+            duration: 20,
+            textSize: '1rem',
+            rotation: '25deg',
+            showControls: true
+        });
     </script>
 </html>

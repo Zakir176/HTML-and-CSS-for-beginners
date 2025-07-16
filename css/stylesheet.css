@@ -406,3 +406,341 @@
                 font-size: 0.9rem;
             }
         }
+
+         /* Star Wars Text Scroll Component */
+        .starwars-scroll {
+            background: white;
+            border: 2px solid #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+            background: linear-gradient(to top, rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0.8) 10%, rgba(245, 245, 245, 0) 30%, rgba(245, 245, 245, 0) 70%, rgba(245, 245, 245, 0.8) 90%, rgba(245, 245, 245, 1) 100%);
+        }
+
+        .starwars-scroll::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(to bottom, rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(245, 245, 245, 0) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .starwars-scroll::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(to top, rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(245, 245, 245, 0) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .scroll-content {
+            position: absolute;
+            width: 100%;
+            animation: scroll-up var(--scroll-duration, 20s) linear infinite;
+            transform-origin: 50% 100%;
+            perspective: 300px;
+        }
+
+        .scroll-text {
+            padding: 20px;
+            font-family: 'Times New Roman', serif;
+            font-size: var(--text-size, 1rem);
+            color: #333;
+            line-height: 1.6;
+            text-align: center;
+            transform: rotateX(var(--rotation, 25deg));
+            transform-style: preserve-3d;
+        }
+
+        .scroll-text h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .scroll-text p {
+            margin-bottom: 15px;
+            text-align: justify;
+            text-indent: 2em;
+        }
+
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(100%) scale(1);
+            }
+            100% {
+                transform: translateY(-100%) scale(0.3);
+            }
+        }
+
+        /* Control buttons */
+        .scroll-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-btn {
+            background: white;
+            border: 2px solid #333;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: #333;
+            color: white;
+        }
+
+        .scroll-content.paused {
+            animation-play-state: paused;
+        }
+
+        /* Demo section */
+        .demo-section {
+            grid-column: 1 / -1;
+            background: white;
+            border: 2px solid #333;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .demo-section h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .demo-btn {
+            padding: 8px 16px;
+            border: 2px solid #333;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            font-family: 'Times New Roman', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-btn:hover {
+            background: #333;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .starwars-scroll {
+                height: 300px;
+            }
+            
+            .scroll-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Star Wars Text Scroll Component */
+        .starwars-scroll {
+            background: white;
+            border: 2px solid #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+            background: linear-gradient(to top, rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0.8) 10%, rgba(245, 245, 245, 0) 30%, rgba(245, 245, 245, 0) 70%, rgba(245, 245, 245, 0.8) 90%, rgba(245, 245, 245, 1) 100%);
+        }
+
+        .starwars-scroll::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(to bottom, rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(245, 245, 245, 0) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .starwars-scroll::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(to top, rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0.8) 50%, rgba(245, 245, 245, 0) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .scroll-content {
+            position: absolute;
+            width: 100%;
+            animation: scroll-up var(--scroll-duration, 20s) linear infinite;
+            transform-origin: 50% 100%;
+            perspective: 300px;
+        }
+
+        .scroll-text {
+            padding: 20px;
+            font-family: 'Times New Roman', serif;
+            font-size: var(--text-size, 1rem);
+            color: #333;
+            line-height: 1.6;
+            text-align: center;
+            transform: rotateX(var(--rotation, 25deg));
+            transform-style: preserve-3d;
+        }
+
+        .scroll-text h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .scroll-text p {
+            margin-bottom: 15px;
+            text-align: justify;
+            text-indent: 2em;
+        }
+
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(100%) scale(1);
+            }
+            100% {
+                transform: translateY(-100%) scale(0.3);
+            }
+        }
+
+        /* Control buttons */
+        .scroll-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-btn {
+            background: white;
+            border: 2px solid #333;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: #333;
+            color: white;
+        }
+
+        .scroll-content.paused {
+            animation-play-state: paused;
+        }
+
+        /* Demo section */
+        .demo-section {
+            grid-column: 1 / -1;
+            background: white;
+            border: 2px solid #333;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .demo-section h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .demo-btn {
+            padding: 8px 16px;
+            border: 2px solid #333;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            font-family: 'Times New Roman', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-btn:hover {
+            background: #333;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .starwars-scroll {
+                height: 300px;
+            }
+            
+            .scroll-text {
+                font-size: 0.9rem;
+            }
+        }
