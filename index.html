@@ -59,9 +59,34 @@
             fade our area.
         </p>
     </div>
-    <div class="photo_gallery">
-        <h2>PHOTO GALLERY</h2>
-        <p>Let’s make a photo gallery that we can scroll through!</p>
+<div class="photo_gallery" id="photoGallery">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Photo Gallery</h1>
+            <p class="gallery-subtitle">Let's make a photo gallery that we can scroll through!</p>
+        </div>
+
+        <div class="gallery-filters" id="galleryFilters">
+            <!-- Filter buttons will be populated by JavaScript -->
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="loading">Loading gallery...</div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="PhotoGallery.closeModal()">&times;</button>
+            <button class="nav-btn prev-btn" onclick="PhotoGallery.previousImage()">&#8249;</button>
+            <button class="nav-btn next-btn" onclick="PhotoGallery.nextImage()">&#8250;</button>
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <div class="modal-info">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <p class="modal-description" id="modalDescription"></p>
+                <span class="modal-category" id="modalCategory"></span>
+            </div>
+        </div>
     </div>
     <div>
         
@@ -80,4 +105,244 @@
 
 </div>
 </body>
+    <script>
+        // Reusable Photo Gallery Component
+        class PhotoGallery {
+            constructor(containerId, options = {}) {
+                this.containerId = containerId;
+                this.container = document.getElementById(containerId);
+                this.photos = options.photos || [];
+                this.title = options.title || 'Photo Gallery';
+                this.subtitle = options.subtitle || 'Let\'s make a photo gallery that we can scroll through!';
+                this.showFilters = options.showFilters !== false;
+                this.showCategories = options.showCategories !== false;
+                
+                this.currentFilter = 'all';
+                this.currentImageIndex = 0;
+                this.filteredPhotos = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.setupHTML();
+                this.setupEventListeners();
+                this.renderFilters();
+                this.renderGallery();
+            }
+
+            setupHTML() {
+                // Update title and subtitle
+                const titleElement = this.container.querySelector('.gallery-title');
+                const subtitleElement = this.container.querySelector('.gallery-subtitle');
+                
+                if (titleElement) titleElement.textContent = this.title;
+                if (subtitleElement) subtitleElement.textContent = this.subtitle;
+            }
+
+            setupEventListeners() {
+                // Modal close on outside click
+                document.getElementById('galleryModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('galleryModal')) {
+                        this.closeModal();
+                    }
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (document.getElementById('galleryModal').style.display === 'block') {
+                        if (e.key === 'Escape') this.closeModal();
+                        if (e.key === 'ArrowLeft') this.previousImage();
+                        if (e.key === 'ArrowRight') this.nextImage();
+                    }
+                });
+            }
+
+            setPhotos(photos) {
+                this.photos = photos;
+                this.renderFilters();
+                this.renderGallery();
+            }
+
+            renderFilters() {
+                if (!this.showFilters) {
+                    document.getElementById('galleryFilters').style.display = 'none';
+                    return;
+                }
+
+                const filtersContainer = document.getElementById('galleryFilters');
+                const categories = ['all', ...new Set(this.photos.map(photo => photo.category))];
+                
+                filtersContainer.innerHTML = categories.map(category => 
+                    `<button class="filter-btn ${category === this.currentFilter ? 'active' : ''}" 
+                             onclick="gallery.filterPhotos('${category}')" 
+                             data-filter="${category}">
+                        ${category.charAt(0).toUpperCase() + category.slice(1)}
+                    </button>`
+                ).join('');
+            }
+
+            renderGallery() {
+                const galleryGrid = document.getElementById('galleryGrid');
+                this.filteredPhotos = this.currentFilter === 'all' 
+                    ? this.photos 
+                    : this.photos.filter(photo => photo.category === this.currentFilter);
+
+                if (this.filteredPhotos.length === 0) {
+                    galleryGrid.innerHTML = '<div class="loading">No photos found.</div>';
+                    return;
+                }
+
+                galleryGrid.innerHTML = this.filteredPhotos.map((photo, index) => `
+                    <div class="gallery-item" onclick="gallery.openModal(${index})">
+                        <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+                        <div class="gallery-item-info">
+                            <h3 class="gallery-item-title">${photo.title}</h3>
+                            <p class="gallery-item-description">${photo.description}</p>
+                            ${this.showCategories ? `<span class="gallery-item-category">${photo.category}</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterPhotos(category) {
+                this.currentFilter = category;
+                this.renderGallery();
+
+                // Update active filter button
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-filter="${category}"]`).classList.add('active');
+            }
+
+            openModal(index) {
+                this.currentImageIndex = index;
+                const photo = this.filteredPhotos[index];
+                
+                document.getElementById('modalImage').src = photo.src;
+                document.getElementById('modalTitle').textContent = photo.title;
+                document.getElementById('modalDescription').textContent = photo.description;
+                document.getElementById('modalCategory').textContent = photo.category;
+                document.getElementById('galleryModal').style.display = 'block';
+            }
+
+            closeModal() {
+                document.getElementById('galleryModal').style.display = 'none';
+            }
+
+            previousImage() {
+                this.currentImageIndex = this.currentImageIndex > 0 
+                    ? this.currentImageIndex - 1 
+                    : this.filteredPhotos.length - 1;
+                this.openModal(this.currentImageIndex);
+            }
+
+            nextImage() {
+                this.currentImageIndex = this.currentImageIndex < this.filteredPhotos.length - 1 
+                    ? this.currentImageIndex + 1 
+                    : 0;
+                this.openModal(this.currentImageIndex);
+            }
+
+            // Static methods for global access
+            static closeModal() {
+                if (window.gallery) window.gallery.closeModal();
+            }
+
+            static previousImage() {
+                if (window.gallery) window.gallery.previousImage();
+            }
+
+            static nextImage() {
+                if (window.gallery) window.gallery.nextImage();
+            }
+        }
+
+        // Sample data
+        const samplePhotos = [
+            {
+                id: 1,
+                src: "https://picsum.photos/400/300?random=1",
+                title: "Mountain Sunrise",
+                description: "A breathtaking sunrise over snow-capped mountains, capturing the golden hour light.",
+                category: "nature"
+            },
+            {
+                id: 2,
+                src: "https://picsum.photos/400/300?random=2",
+                title: "Modern Architecture",
+                description: "Contemporary building with clean lines and innovative glass facade design.",
+                category: "architecture"
+            },
+            {
+                id: 3,
+                src: "https://picsum.photos/400/300?random=3",
+                title: "Portrait Session",
+                description: "Professional portrait photography with natural lighting and artistic composition.",
+                category: "people"
+            },
+            {
+                id: 4,
+                src: "https://picsum.photos/400/300?random=4",
+                title: "Abstract Colors",
+                description: "Vibrant abstract composition with flowing colors and dynamic movement.",
+                category: "abstract"
+            },
+            {
+                id: 5,
+                src: "https://picsum.photos/400/300?random=5",
+                title: "Forest Path",
+                description: "Peaceful walking path through dense forest with dappled sunlight.",
+                category: "nature"
+            },
+            {
+                id: 6,
+                src: "https://picsum.photos/400/300?random=6",
+                title: "City Skyline",
+                description: "Urban landscape showcasing towering skyscrapers and modern city life.",
+                category: "architecture"
+            },
+            {
+                id: 7,
+                src: "https://picsum.photos/400/300?random=7",
+                title: "Street Photography",
+                description: "Candid moment captured on busy street, telling a story of urban life.",
+                category: "people"
+            },
+            {
+                id: 8,
+                src: "https://picsum.photos/400/300?random=8",
+                title: "Geometric Patterns",
+                description: "Mathematical beauty expressed through abstract geometric forms and patterns.",
+                category: "abstract"
+            },
+            {
+                id: 9,
+                src: "https://picsum.photos/400/300?random=9",
+                title: "Ocean Waves",
+                description: "Powerful waves crashing against rocky shore with dramatic spray.",
+                category: "nature"
+            },
+            {
+                id: 10,
+                src: "https://picsum.photos/400/300?random=10",
+                title: "Historic Bridge",
+                description: "Architectural marvel spanning the river, connecting past and present.",
+                category: "architecture"
+            }
+        ];
+
+        // Initialize the gallery
+        const gallery = new PhotoGallery('photoGallery', {
+            photos: samplePhotos,
+            title: 'Photo Gallery',
+            subtitle: 'Let\'s make a photo gallery that we can scroll through!',
+            showFilters: true,
+            showCategories: true
+        });
+
+        // Make gallery globally accessible for demo purposes
+        window.gallery = gallery;
+    </script>
 </html>
