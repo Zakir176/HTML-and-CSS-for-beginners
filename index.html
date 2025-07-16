@@ -7,7 +7,8 @@
 </head>
 
 <body>
-<div id = "wrapper">
+<div class="main_page_content">
+    <div id = "wrapper">
 
     <div class = "main_header">
         <h1>HTML and CSS practise for beginners</h1>
@@ -46,34 +47,529 @@
             with your code! Learn something new every day!
         </p>
     </div>
-    <div>
-        <h2 class="section_3">What will you learn today?</h2>
-        <p class="star_wars">Why don't you try turning this </br>
-            text box into a star wars type text</br>
-            scroll, where it fades in the </br>
-            distance, using purely css? Don't think its possible? </br>
-            I have done it before and its easier than you think!</br>
-            Obviously if you feel the need to, create more text </br>
-            here to elongate the paragraph. This will affect the time</br>
-            it takes for the text to travel up the page and into the </br>
-            fade our area.
-        </p>
+ <div class="page-container">
+        <div class="info-box">
+            <h2>How to use this page</h2>
+            <p>This page is completely open source, and the code and files are available for ALL to download. I, Carlie, created a mini website for anyone to practise on, change, adapt, edit and style in any which way they desire, with the hopes this can be a place for those who are beginning with coding and need a place to practice their skills and learn. This page and its files can be found on GitHub, an AMAZING resource for programmers and coders to come together and collaborate on projects together, receive tips and advice and archive code. If you would like to view the original repository for this page then click.</p>
+        </div>
+
+        <div class="info-box">
+            <h2>Rules</h2>
+            <p>When playing with this code and styling it, try to keep with the current theme, however I do understand that this will change over time. Use fonts that have been used elsewhere on the page and use text spacing colors and themes. When it comes to using HTML elements and tags, use those which are new to you, or you are trying to practice with, and the same goes with CSS. This may seem overly simple and pointless, but to those starting out can be valuable. You can view previous changes and see how people did what they did by viewing older commits. Have fun and be daring with your code! Learn something new every day!</p>
+        </div>
+
+        <div class="starwars-scroll" id="starwarsScroll1">
+            <div class="scroll-controls">
+                <button class="control-btn" onclick="toggleScroll('starwarsScroll1')" title="Play/Pause">⏸</button>
+                <button class="control-btn" onclick="restartScroll('starwarsScroll1')" title="Restart">↻</button>
+            </div>
+            <div class="scroll-content" id="scrollContent1">
+                <div class="scroll-text">
+                    <h3>What will you learn today?</h3>
+                    <p>Why don't you try turning this text box into a star wars type text scroll, where it fades in the distance, using purely CSS? Don't think it's possible? I have done it before and its easier than you think!</p>
+                    <p>Obviously if you feel the need to, create more text here to elongate the paragraph. This will affect the time it takes for the text to travel up the page and into the fade out area.</p>
+                    <p>The magic happens through CSS transforms and animations. By using perspective and rotateX, we create the illusion of text moving away from us into the distance. The gradient overlay provides the fade effect, making text appear and disappear naturally.</p>
+                    <p>This technique combines 3D CSS transforms with keyframe animations to create a cinematic effect that's both engaging and technically impressive. The best part? It's all done with pure CSS - no JavaScript required for the core animation!</p>
+                    <p>You can customize the speed, text size, rotation angle, and even add interactive controls. The component is fully reusable and can be integrated into any website while maintaining the existing theme and design language.</p>
+                    <p>Try experimenting with different text content, animation speeds, and styling options. The possibilities are endless when you understand the underlying principles of CSS 3D transforms and animations.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Reusable Star Wars Scroll Component</h2>
+            <div class="demo-controls">
+                <button class="demo-btn" onclick="createScrollDemo('fast')">Fast Scroll</button>
+                <button class="demo-btn" onclick="createScrollDemo('slow')">Slow Scroll</button>
+                <button class="demo-btn" onclick="createScrollDemo('large')">Large Text</button>
+                <button class="demo-btn" onclick="createScrollDemo('angled')">More Angled</button>
+                <button class="demo-btn" onclick="createScrollDemo('custom')">Custom Content</button>
+            </div>
+            <div id="dynamicScrollContainer"></div>
+        </div>
     </div>
-    <div class="photo_gallery">
-        <h2>PHOTO GALLERY</h2>
-        <p>Let’s make a photo gallery that we can scroll through!</p>
+ <div class="photo-gallery" id="photoGallery">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Photo Gallery</h1>
+            <p class="gallery-subtitle">Let's make a photo gallery that we can scroll through!</p>
+        </div>
+
+        <div class="gallery-filters" id="galleryFilters">
+            <!-- Filter buttons will be populated by JavaScript -->
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="loading">Loading gallery...</div>
+        </div>
     </div>
-    <div>
-        
+
+    <!-- Modal -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="PhotoGallery.closeModal()">&times;</button>
+            <button class="nav-btn prev-btn" onclick="PhotoGallery.previousImage()">&#8249;</button>
+            <button class="nav-btn next-btn" onclick="PhotoGallery.nextImage()">&#8250;</button>
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <div class="modal-info">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <p class="modal-description" id="modalDescription"></p>
+                <span class="modal-category" id="modalCategory"></span>
+            </div>
+        </div>
+    </div>        
     </div>
-    <div class="footer">
-        <span>This footer will always be positioned at the bottom of the page.</span>
-        <span class="social_icons">
-            <a href="facebook.com"><img src="images/facebook.png" alt="Facebook icon" height="42" width="42"></a>
-            <a href="instagram.com"><img src="images/insta.jpg" alt="Instagram icon" height="42" width="42"></a>
-            <a href="twitter.com"><img src="images/twitter.jpg" alt="Twitter icon" height="42" width="42"></a>
-        </span>
-    </div>
+</div>
+<div id="footer-placeholder"></div>
+
+<script>
+            // Reusable Photo Gallery Component
+        class PhotoGallery {
+            constructor(containerId, options = {}) {
+                this.containerId = containerId;
+                this.container = document.getElementById(containerId);
+                this.photos = options.photos || [];
+                this.title = options.title || 'Photo Gallery';
+                this.subtitle = options.subtitle || 'Let\'s make a photo gallery that we can scroll through!';
+                this.showFilters = options.showFilters !== false;
+                this.showCategories = options.showCategories !== false;
+                
+                this.currentFilter = 'all';
+                this.currentImageIndex = 0;
+                this.filteredPhotos = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.setupHTML();
+                this.setupEventListeners();
+                this.renderFilters();
+                this.renderGallery();
+            }
+
+            setupHTML() {
+                // Update title and subtitle
+                const titleElement = this.container.querySelector('.gallery-title');
+                const subtitleElement = this.container.querySelector('.gallery-subtitle');
+                
+                if (titleElement) titleElement.textContent = this.title;
+                if (subtitleElement) subtitleElement.textContent = this.subtitle;
+            }
+
+            setupEventListeners() {
+                // Modal close on outside click
+                document.getElementById('galleryModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('galleryModal')) {
+                        this.closeModal();
+                    }
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (document.getElementById('galleryModal').style.display === 'block') {
+                        if (e.key === 'Escape') this.closeModal();
+                        if (e.key === 'ArrowLeft') this.previousImage();
+                        if (e.key === 'ArrowRight') this.nextImage();
+                    }
+                });
+            }
+
+            setPhotos(photos) {
+                this.photos = photos;
+                this.renderFilters();
+                this.renderGallery();
+            }
+
+            renderFilters() {
+                if (!this.showFilters) {
+                    document.getElementById('galleryFilters').style.display = 'none';
+                    return;
+                }
+
+                const filtersContainer = document.getElementById('galleryFilters');
+                const categories = ['all', ...new Set(this.photos.map(photo => photo.category))];
+                
+                filtersContainer.innerHTML = categories.map(category => 
+                    `<button class="filter-btn ${category === this.currentFilter ? 'active' : ''}" 
+                             onclick="gallery.filterPhotos('${category}')" 
+                             data-filter="${category}">
+                        ${category.charAt(0).toUpperCase() + category.slice(1)}
+                    </button>`
+                ).join('');
+            }
+
+            renderGallery() {
+                const galleryGrid = document.getElementById('galleryGrid');
+                this.filteredPhotos = this.currentFilter === 'all' 
+                    ? this.photos 
+                    : this.photos.filter(photo => photo.category === this.currentFilter);
+
+                if (this.filteredPhotos.length === 0) {
+                    galleryGrid.innerHTML = '<div class="loading">No photos found.</div>';
+                    return;
+                }
+
+                galleryGrid.innerHTML = this.filteredPhotos.map((photo, index) => `
+                    <div class="gallery-item" onclick="gallery.openModal(${index})">
+                        <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+                        <div class="gallery-item-info">
+                            <h3 class="gallery-item-title">${photo.title}</h3>
+                            <p class="gallery-item-description">${photo.description}</p>
+                            ${this.showCategories ? `<span class="gallery-item-category">${photo.category}</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterPhotos(category) {
+                this.currentFilter = category;
+                this.renderGallery();
+
+                // Update active filter button
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-filter="${category}"]`).classList.add('active');
+            }
+
+            openModal(index) {
+                this.currentImageIndex = index;
+                const photo = this.filteredPhotos[index];
+                
+                document.getElementById('modalImage').src = photo.src;
+                document.getElementById('modalTitle').textContent = photo.title;
+                document.getElementById('modalDescription').textContent = photo.description;
+                document.getElementById('modalCategory').textContent = photo.category;
+                document.getElementById('galleryModal').style.display = 'block';
+            }
+
+            closeModal() {
+                document.getElementById('galleryModal').style.display = 'none';
+            }
+
+            previousImage() {
+                this.currentImageIndex = this.currentImageIndex > 0 
+                    ? this.currentImageIndex - 1 
+                    : this.filteredPhotos.length - 1;
+                this.openModal(this.currentImageIndex);
+            }
+
+            nextImage() {
+                this.currentImageIndex = this.currentImageIndex < this.filteredPhotos.length - 1 
+                    ? this.currentImageIndex + 1 
+                    : 0;
+                this.openModal(this.currentImageIndex);
+            }
+
+            // Static methods for global access
+            static closeModal() {
+                if (window.gallery) window.gallery.closeModal();
+            }
+
+            static previousImage() {
+                if (window.gallery) window.gallery.previousImage();
+            }
+
+            static nextImage() {
+                if (window.gallery) window.gallery.nextImage();
+            }
+        }
+
+        // Sample data
+        const samplePhotos = [
+            {
+                id: 1,
+                src: "https://picsum.photos/400/300?random=1",
+                title: "Mountain Sunrise",
+                description: "A breathtaking sunrise over snow-capped mountains, capturing the golden hour light.",
+                category: "nature"
+            },
+            {
+                id: 2,
+                src: "https://picsum.photos/400/300?random=2",
+                title: "Modern Architecture",
+                description: "Contemporary building with clean lines and innovative glass facade design.",
+                category: "architecture"
+            },
+            {
+                id: 3,
+                src: "https://picsum.photos/400/300?random=3",
+                title: "Portrait Session",
+                description: "Professional portrait photography with natural lighting and artistic composition.",
+                category: "people"
+            },
+            {
+                id: 4,
+                src: "https://picsum.photos/400/300?random=4",
+                title: "Abstract Colors",
+                description: "Vibrant abstract composition with flowing colors and dynamic movement.",
+                category: "abstract"
+            },
+            {
+                id: 5,
+                src: "https://picsum.photos/400/300?random=5",
+                title: "Forest Path",
+                description: "Peaceful walking path through dense forest with dappled sunlight.",
+                category: "nature"
+            },
+            {
+                id: 6,
+                src: "https://picsum.photos/400/300?random=6",
+                title: "City Skyline",
+                description: "Urban landscape showcasing towering skyscrapers and modern city life.",
+                category: "architecture"
+            },
+            {
+                id: 7,
+                src: "https://picsum.photos/400/300?random=7",
+                title: "Street Photography",
+                description: "Candid moment captured on busy street, telling a story of urban life.",
+                category: "people"
+            },
+            {
+                id: 8,
+                src: "https://picsum.photos/400/300?random=8",
+                title: "Geometric Patterns",
+                description: "Mathematical beauty expressed through abstract geometric forms and patterns.",
+                category: "abstract"
+            },
+            {
+                id: 9,
+                src: "https://picsum.photos/400/300?random=9",
+                title: "Ocean Waves",
+                description: "Powerful waves crashing against rocky shore with dramatic spray.",
+                category: "nature"
+            },
+            {
+                id: 10,
+                src: "https://picsum.photos/400/300?random=10",
+                title: "Historic Bridge",
+                description: "Architectural marvel spanning the river, connecting past and present.",
+                category: "architecture"
+            }
+        ];
+
+        // Initialize the gallery
+        const gallery = new PhotoGallery('photoGallery', {
+            photos: samplePhotos,
+            title: 'Photo Gallery',
+            subtitle: 'Let\'s make a photo gallery that we can scroll through!',
+            showFilters: true,
+            showCategories: true
+        });
+
+        // Make gallery globally accessible for demo purposes
+        window.gallery = gallery;
+  fetch('/footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-placeholder').innerHTML = data;
+    })
+    .catch(err => console.error('Failed to load footer:', err));
+      // Reusable Star Wars Scroll Component
+        class StarWarsScroll {
+            constructor(containerId, options = {}) {
+                this.containerId = containerId;
+                this.container = document.getElementById(containerId);
+                this.options = {
+                    duration: options.duration || 20, // seconds
+                    textSize: options.textSize || '1rem',
+                    rotation: options.rotation || '25deg',
+                    height: options.height || '400px',
+                    showControls: options.showControls !== false,
+                    content: options.content || this.getDefaultContent(),
+                    autoStart: options.autoStart !== false,
+                    ...options
+                };
+                
+                this.isPlaying = this.options.autoStart;
+                this.init();
+            }
+
+            getDefaultContent() {
+                return `
+                    <h3>Star Wars Scroll</h3>
+                    <p>This is a reusable Star Wars-style text scroll component created with pure CSS and JavaScript.</p>
+                    <p>You can customize the speed, text size, rotation angle, and content to fit your needs.</p>
+                    <p>The component maintains the theme of your website while adding an engaging cinematic effect.</p>
+                `;
+            }
+
+            init() {
+                this.createHTML();
+                this.setupEventListeners();
+                if (this.options.autoStart) {
+                    this.start();
+                }
+            }
+
+            createHTML() {
+                this.container.innerHTML = `
+                    <div class="starwars-scroll" style="height: ${this.options.height};">
+                        ${this.options.showControls ? `
+                            <div class="scroll-controls">
+                                <button class="control-btn" onclick="window.scrollInstances['${this.containerId}'].toggle()" title="Play/Pause">${this.isPlaying ? '⏸' : '▶'}</button>
+                                <button class="control-btn" onclick="window.scrollInstances['${this.containerId}'].restart()" title="Restart">↻</button>
+                            </div>
+                        ` : ''}
+                        <div class="scroll-content" style="
+                            --scroll-duration: ${this.options.duration}s;
+                            --text-size: ${this.options.textSize};
+                            --rotation: ${this.options.rotation};
+                        ">
+                            <div class="scroll-text">
+                                ${this.options.content}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.scrollContent = this.container.querySelector('.scroll-content');
+                this.playButton = this.container.querySelector('.control-btn');
+            }
+
+            setupEventListeners() {
+                // Store instance globally for button access
+                if (!window.scrollInstances) {
+                    window.scrollInstances = {};
+                }
+                window.scrollInstances[this.containerId] = this;
+            }
+
+            start() {
+                this.isPlaying = true;
+                this.scrollContent.classList.remove('paused');
+                if (this.playButton) {
+                    this.playButton.textContent = '⏸';
+                }
+            }
+
+            pause() {
+                this.isPlaying = false;
+                this.scrollContent.classList.add('paused');
+                if (this.playButton) {
+                    this.playButton.textContent = '▶';
+                }
+            }
+
+            toggle() {
+                if (this.isPlaying) {
+                    this.pause();
+                } else {
+                    this.start();
+                }
+            }
+
+            restart() {
+                this.scrollContent.style.animation = 'none';
+                this.scrollContent.offsetHeight; // Trigger reflow
+                this.scrollContent.style.animation = null;
+                this.start();
+            }
+
+            updateContent(newContent) {
+                this.options.content = newContent;
+                this.container.querySelector('.scroll-text').innerHTML = newContent;
+            }
+
+            updateOptions(newOptions) {
+                this.options = { ...this.options, ...newOptions };
+                this.scrollContent.style.setProperty('--scroll-duration', `${this.options.duration}s`);
+                this.scrollContent.style.setProperty('--text-size', this.options.textSize);
+                this.scrollContent.style.setProperty('--rotation', this.options.rotation);
+            }
+        }
+
+        // Global functions for inline event handlers
+        function toggleScroll(containerId) {
+            if (window.scrollInstances && window.scrollInstances[containerId]) {
+                window.scrollInstances[containerId].toggle();
+            }
+        }
+
+        function restartScroll(containerId) {
+            if (window.scrollInstances && window.scrollInstances[containerId]) {
+                window.scrollInstances[containerId].restart();
+            }
+        }
+
+        // Demo functions
+        function createScrollDemo(type) {
+            const container = document.getElementById('dynamicScrollContainer');
+            container.innerHTML = '<div id="demoScroll"></div>';
+
+            let options = {};
+            
+            switch(type) {
+                case 'fast':
+                    options = {
+                        duration: 10,
+                        content: `
+                            <h3>Fast Scroll Demo</h3>
+                            <p>This scroll moves much faster than the default speed.</p>
+                            <p>Perfect for shorter content or when you want a more dynamic feel.</p>
+                        `
+                    };
+                    break;
+                case 'slow':
+                    options = {
+                        duration: 30,
+                        content: `
+                            <h3>Slow Scroll Demo</h3>
+                            <p>This scroll moves slowly and deliberately.</p>
+                            <p>Great for longer content or when you want users to have time to read everything.</p>
+                            <p>The slower pace creates a more contemplative, cinematic experience.</p>
+                        `
+                    };
+                    break;
+                case 'large':
+                    options = {
+                        textSize: '1.2rem',
+                        content: `
+                            <h3>Large Text Demo</h3>
+                            <p>This demonstrates larger text size for better readability.</p>
+                            <p>Useful for important announcements or when targeting users who prefer larger fonts.</p>
+                        `
+                    };
+                    break;
+                case 'angled':
+                    options = {
+                        rotation: '40deg',
+                        content: `
+                            <h3>More Angled Demo</h3>
+                            <p>This version has a more dramatic angle, creating a stronger 3D effect.</p>
+                            <p>The steeper perspective makes the text appear to recede more dramatically into the distance.</p>
+                        `
+                    };
+                    break;
+                case 'custom':
+                    options = {
+                        duration: 25,
+                        textSize: '1.1rem',
+                        rotation: '30deg',
+                        content: `
+                            <h3>Custom Configuration</h3>
+                            <p>This example shows how you can combine multiple options to create exactly the effect you want.</p>
+                            <p>Medium duration, slightly larger text, and a moderate angle work together to create a balanced, professional look.</p>
+                            <p>The component is fully customizable while maintaining the theme and design consistency of your website.</p>
+                            <p>You can adjust timing, appearance, and behavior to match your specific needs and design requirements.</p>
+                        `
+                    };
+                    break;
+            }
+
+            new StarWarsScroll('demoScroll', options);
+        }
+
+        // Initialize the main scroll
+        const mainScroll = new StarWarsScroll('starwarsScroll1', {
+            duration: 20,
+            textSize: '1rem',
+            rotation: '25deg',
+            showControls: true
+        });
+</script>
+
 
 
 
